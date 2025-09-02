@@ -11,3 +11,25 @@ export const articleTagModel = sequelize.define("article_tag", {
     allowNull: false,
   },
 });
+
+//relacion mucho a mucho
+articleModel.belongsToMany(tagModel, {
+  through: articleTagModel,
+  foreignKey: "tag_id",
+  as: "tag",
+});
+
+tagModel.belongsToMany(articleModel, {
+  through: articleModel,
+  foreignKey: "article_id",
+  as: "article",
+});
+
+//config necesaria para obtener los datos
+
+articleTagModel.belongsTo(articleModel, {
+  targetKey: "id",
+  foreignKey: "article_id",
+});
+
+articleTagModel.belongsTo(tagModel, { targetKey: "id", foreignKey: "tag_id" });
