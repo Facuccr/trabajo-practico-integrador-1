@@ -8,3 +8,6 @@ export const profileModel = sequelize.define("Profile", {
   avatar_url: { type: DataTypes.STRING(255), allowNull: true },
   birth_date: { type: DataTypes.DATE, allowNull: true },
 });
+
+user.hasOne(profileModel, { foreignKey: "user_id", as: "profile" });
+profileModel.belongsTo(user, { foreignKey: "user_id", as: "user " });
