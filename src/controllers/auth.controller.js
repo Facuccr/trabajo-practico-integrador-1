@@ -35,6 +35,7 @@ export const register = async (req, res) => {
       biography: biography,
       avatar_url: avatar_url,
       birth_date: birth_date,
+      user_id: user.id,
     });
 
     return res.status(201).json({ msg: "usuario registrado correctamente" });
@@ -117,29 +118,20 @@ export const getProfile = async (req, res) => {
   }
 };
 
+import profileModel from "../models/profile.model.js";
+
 export const updateProfile = async (req, res) => {
   try {
-    const data = req.body;
+    const data = matchedData(req, { locations: ["body"] });
 
-    const perfil = await Profile.findOne({ where: { user_id: req.user.id } });
+    const userId = req.user.id;
 
-    if (!perfil) {
-      return res.status(404).json({ message: "perfil no encontrado" });
-    }
+    await profileModel.update(data, { where: { user_id: userId } });
 
-    await perfil.update({
-      first_name: data.first_name,
-      last_name: data.last_name,
-      biography: data.biography,
-      avatar_url: data.avatar_url,
-      birth_date: data.birth_date,
-    });
-
-    return res.json({
-      message: "perfil actualizado correctamente",
-      perfil,
-    });
+    return res.json({ msg: "Perfil actualizado correctamente" });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res
+      .status(500)
+      .json({ msg: "Error al actualizar perfil", error: error.message });
   }
 };
