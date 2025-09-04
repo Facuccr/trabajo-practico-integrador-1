@@ -35,7 +35,6 @@ export const register = async (req, res) => {
       biography: biography,
       avatar_url: avatar_url,
       birth_date: birth_date,
-      user_id: user.id,
     });
 
     return res.status(201).json({ msg: "usuario registrado correctamente" });
@@ -117,8 +116,6 @@ export const getProfile = async (req, res) => {
     });
   }
 };
-
-import profileModel from "../models/profile.model.js";
 
 export const updateProfile = async (req, res) => {
   try {
