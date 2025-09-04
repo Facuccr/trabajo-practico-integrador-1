@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { generateToken } from "../helpers/jwt.helper.js";
 import { userModel } from "../models/user.model.js";
 import { profileModel } from "../models/profile.model.js";
+import { hashPassword, comparePassword } from "../helpers/bcrypt.helper.js";
 
 export const register = async (req, res) => {
   try {
@@ -18,7 +19,7 @@ export const register = async (req, res) => {
     } = req.body;
 
     //hash de contaseña:
-    const hashedPassword = bcrypt.hash(password);
+    const hashedPassword = await hashPassword(password);
 
     const user = await userModel.create({
       username: username,
@@ -47,7 +48,7 @@ export const login = async (req, res) => {
 
   try {
     const user = userModel.findOne({
-      where: { username: username, password: password },
+      where: { username: username },
       include: {
         model: profileModel,
         as: "profile",
@@ -60,7 +61,7 @@ export const login = async (req, res) => {
         .json({ msg: "La contraseña es incorrecta o el Usuario no existe" });
     }
 
-    const validatePassword = await compare(password, user.password);
+    const validatePassword = await comparePassword(password, user.password);
 
     if (!validatePassword) {
       return res
