@@ -23,6 +23,6 @@ export const verifyToken = (token) => {
   try {
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
-    throw new Error("error al verificar el token", error.msg);
+    throw new Error("error al verificar el token ${error.message}");
   }
 };
