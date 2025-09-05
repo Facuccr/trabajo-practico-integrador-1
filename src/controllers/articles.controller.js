@@ -9,6 +9,16 @@ export const getAllArticles = async (req, res) => {
     res.status(500).json({ msg: "error en el servidor" });
   }
 };
+
+export const getUserArticles = async (req, res) => {
+  try {
+    const articles = await articleModel.findAll();
+    res.status(200).json(articles);
+  } catch (error) {
+    res.status(500).json({ msg: "error en el servidor" });
+  }
+};
+
 export const getArticleById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -27,7 +37,7 @@ export const createArticle = async (req, res) => {
 
     return res.status(201).json(article);
   } catch (error) {
-    res.status(500).json({ msg: "error en el servidor", error: error.msg });
+    res.status(500).json({ msg: "error en el servidor", error: error.message });
   }
 };
 
