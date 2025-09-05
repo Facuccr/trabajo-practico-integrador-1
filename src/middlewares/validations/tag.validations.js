@@ -1,5 +1,5 @@
 import { param, body } from "express-validator";
-import tagModel from "../../models/tag.model.js";
+import { tagModel } from "../../models/tag.model.js";
 export const createTagValidations = [
   body("name")
     .notEmpty()
@@ -14,5 +14,55 @@ export const createTagValidations = [
       if (tag) {
         throw new Error("la etiqueta ya existe");
       }
+    }),
+];
+
+export const deleteTagValidations = [
+  param("id")
+    .notEmpty()
+    .withMessage("el id de la etiqueta es obligatorio")
+    .isInt()
+    .withMessage("el id de la etiqueta debe de ser un numero entero")
+    .custom(async (id) => {
+      const tag = await tagModel.findByPk(id);
+      if (!tag) {
+        throw new Error("la etiqueta no existe en la  base de datos");
+      }
+      return true;
+    }),
+];
+
+export const updateTagValidations = [
+  param("id")
+    .notEmpty()
+    .withMessage("el id de la etiqueta es obligatorio")
+    .isInt()
+    .withMessage("el id de la etiqueta debe de ser un numero entero")
+    .custom(async (id) => {
+      const tag = await tagModel.findByPk(id);
+      if (!tag) {
+        throw new Error("la etiqueta no existe en la base de datos");
+      }
+      return true;
+    }),
+  body("name")
+    .notEmpty()
+    .withMessage("el nombre de la etiqueta no puede estar vacio")
+    .trim()
+    .isLength({ min: 2, max: 30 }),
+];
+
+export const getTagIdValidations = [
+  param("id")
+    .notEmpty()
+    .withMessage("el id de la etiqueta es obligatorio")
+    .isInt()
+    .withMessage("el id de la etiqueta debe de ser un numero entero")
+    .custom(async (id) => {
+      const tag = await tagModel.findByPk(id);
+      if (!tag) {
+        throw new Error("la etiqueta no existe en la base de datos");
+      }
+      return true;
     }),
 ];
