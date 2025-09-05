@@ -12,24 +12,30 @@ export const articleTagModel = sequelize.define("article_tag", {
   },
 });
 
-//relacion mucho a mucho
+///relaciones
 articleModel.belongsToMany(tagModel, {
   through: articleTagModel,
-  foreignKey: "tag_id",
+  foreignKey: "article_id",
   as: "tag",
+  onDelete: "CASCADE",
 });
 
 tagModel.belongsToMany(articleModel, {
-  through: articleModel,
-  foreignKey: "article_id",
+  through: articleTagModel,
+  foreignKey: "tag_id",
   as: "article",
+  onDelete: "CASCADE",
 });
 
 //config necesaria para obtener los datos
 
-articleTagModel.belongsTo(articleModel, {
-  targetKey: "id",
-  foreignKey: "article_id",
+articleTagModel.belongsTo(tagModel, {
+  foreignKey: "tag_id",
+  as: "tag",
+  onDelete: "CASCADE",
 });
-
-articleTagModel.belongsTo(tagModel, { targetKey: "id", foreignKey: "tag_id" });
+articleTagModel.belongsTo(articleModel, {
+  foreignKey: "article_id",
+  as: "article",
+  onDelete: "CASCADE",
+});
